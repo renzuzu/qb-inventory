@@ -114,12 +114,14 @@ exports("GetTotalWeight", GetTotalWeight)
 ---@param items { [number]: { name: string, amount: number, info?: table, label: string, description: string, weight: number, type: string, unique: boolean, useable: boolean, image: string, shouldClose: boolean, slot: number, combinable: table } } Table of items, usually the inventory table of the player
 ---@param itemName string Name of the item to the get the slots from
 ---@return number[] slotsFound Array of slots that were found for the item
-local function GetSlotsByItem(items, itemName)
+local function GetSlotsByItem(items, itemName, info)
     local slotsFound = {}
     if not items then return slotsFound end
     for slot, item in pairs(items) do
         if item.name:lower() == itemName:lower() then
-            slotsFound[#slotsFound+1] = slot
+			if not info or info and table_matches(info,item.info) then
+            	slotsFound[#slotsFound+1] = slot
+			end
         end
     end
     return slotsFound
@@ -217,14 +219,16 @@ exports("AddItem", AddItem)
 ---@param amount? number The amount of the item to remove
 ---@param slot? number The slot to remove the item from
 ---@return boolean success Returns true if the item was remove, false it the item couldn't be removed
-local function RemoveItem(source, item, amount, slot)
+local function RemoveItem(source, item, amount, slot, info)
 	local Player = QBCore.Functions.GetPlayer(source)
 
 	if not Player then return false end
-
 	amount = tonumber(amount) or 1
 	slot = tonumber(slot)
-
+	if info then
+		slot , itemdata = GetItemByInfo(source, item, info)
+		amount = tonumber(itemdata.amount) or 1
+	end
 	if slot then
 		if Player.PlayerData.items[slot].amount > amount then
 			Player.PlayerData.items[slot].amount = Player.PlayerData.items[slot].amount - amount
@@ -246,7 +250,7 @@ local function RemoveItem(source, item, amount, slot)
 			return true
 		end
 	else
-		local slots = GetSlotsByItem(Player.PlayerData.items, item)
+		local slots = GetSlotsByItem(Player.PlayerData.items, item, info)
 		local amountToRemove = amount
 
 		if not slots then return false end
@@ -322,7 +326,7 @@ end
 
 exports("GetItemsByName", GetItemsByName)
 
-local function GetItemsByInfo(source, item, info)
+local function GetItemByInfo(source, item, info)
 	local Player = QBCore.Functions.GetPlayer(source)
 	item = tostring(item):lower()
 	local items = {}
@@ -337,7 +341,7 @@ local function GetItemsByInfo(source, item, info)
 	end
 end
 
-exports("GetItemsByInfo", GetItemsByInfo)
+exports("GetItemByInfo", GetItemByInfo)
 
 ---Clear the inventory of the player with the provided source and filter any items out of the clearing of the inventory to keep (optional)
 ---@param source number Source of the player to clear the inventory from
