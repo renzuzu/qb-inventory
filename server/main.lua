@@ -322,6 +322,23 @@ end
 
 exports("GetItemsByName", GetItemsByName)
 
+local function GetItemsByInfo(source, item, info)
+	local Player = QBCore.Functions.GetPlayer(source)
+	item = tostring(item):lower()
+	local items = {}
+	local slots = GetSlotsByItem(Player.PlayerData.items, item)
+	for _, slot in pairs(slots) do
+		if slot then
+			local itemdata = Player.PlayerData.items[slot]
+			if table_matches(itemdata.info, info) then
+				return slot, itemdata
+			end
+		end
+	end
+end
+
+exports("GetItemsByInfo", GetItemsByInfo)
+
 ---Clear the inventory of the player with the provided source and filter any items out of the clearing of the inventory to keep (optional)
 ---@param source number Source of the player to clear the inventory from
 ---@param filterItems? string | string[] Array of item names to keep
@@ -2287,3 +2304,20 @@ CreateThread(function()
 end)
 
 --#endregion Threads
+
+function table_matches(t1, t2)
+	local type1, type2 = type(t1), type(t2)
+	if type1 ~= type2 then return false end
+	if type1 ~= 'table' and type2 ~= 'table' then return t1 == t2 end
+
+	for k1,v1 in pairs(t1) do
+	   local v2 = t2[k1]
+	   if v2 == nil or not table_matches(v1,v2) then return false end
+	end
+
+	for k2,v2 in pairs(t2) do
+	   local v1 = t1[k2]
+	   if v1 == nil or not table_matches(v1,v2) then return false end
+	end
+	return true
+end
