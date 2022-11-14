@@ -562,10 +562,14 @@ end
 ---@return table items
 local function GetStashItems(stashId)
 	local items = {}
-	local result = MySQL.scalar.await('SELECT items FROM stashitems WHERE stash = ?', {stashId})
-	if not result then return items end
-
-	local stashItems = json.decode(result)
+	local stashItems
+	if not Stashes[stashId] then
+		local result = MySQL.scalar.await('SELECT items FROM stashitems WHERE stash = ?', {stashId})
+		if not result then return items end
+		stashItems = json.decode(result)
+	else
+		stashItems = Stashes[stashId].items
+	end
 	if not stashItems then return items end
 
 	for _, item in pairs(stashItems) do
@@ -588,6 +592,8 @@ local function GetStashItems(stashId)
 	end
 	return items
 end
+
+exports('GetStashItems', GetStashItems)
 
 ---Save the items in a stash
 ---@param stashId string The stash id to save the items from
