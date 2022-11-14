@@ -133,10 +133,10 @@ exports("GetSlotsByItem", GetSlotsByItem)
 ---@param items { [number]: { name: string, amount: number, info?: table, label: string, description: string, weight: number, type: string, unique: boolean, useable: boolean, image: string, shouldClose: boolean, slot: number, combinable: table } } Table of items, usually the inventory table of the player
 ---@param itemName string Name of the item to the get the slot from
 ---@return number | nil slot If found it returns a number representing the slot, otherwise it sends nil
-local function GetFirstSlotByItem(items, itemName)
+local function GetFirstSlotByItem(items, itemName, info)
     if not items then return nil end
     for slot, item in pairs(items) do
-        if item.name:lower() == itemName:lower() then
+        if item.name:lower() == itemName:lower() and not info and table_matches(info or {}, item.info or {}) or item.name:lower() == itemName:lower() and info and table_matches(info, item.info) then
             return tonumber(slot)
         end
     end
@@ -165,15 +165,17 @@ local function AddItem(source, item, amount, slot, info)
 	end
 
 	amount = tonumber(amount) or 1
-	slot = tonumber(slot) or GetFirstSlotByItem(Player.PlayerData.items, item)
+	slot = tonumber(slot) or GetFirstSlotByItem(Player.PlayerData.items, item, info)
 	info = info or {}
-
 	if itemInfo['type'] == 'weapon' then
 		info.serie = info.serie or tostring(QBCore.Shared.RandomInt(2) .. QBCore.Shared.RandomStr(3) .. QBCore.Shared.RandomInt(1) .. QBCore.Shared.RandomStr(2) .. QBCore.Shared.RandomInt(3) .. QBCore.Shared.RandomStr(4))
 		info.quality = info.quality or 100
 	end
 	if (totalWeight + (itemInfo['weight'] * amount)) <= Config.MaxInventoryWeight then
-		if (slot and Player.PlayerData.items[slot]) and (Player.PlayerData.items[slot].name:lower() == item:lower()) and (itemInfo['type'] == 'item' and not itemInfo['unique']) then
+		local slotdata = slot and Player.PlayerData.items?[slot]
+		local samedata = slotdata and (slotdata.name:lower() == item:lower()) and (itemInfo['type'] == 'item')
+		if samedata and not itemInfo['unique'] and table_matches(slotdata.info or {}, info or {})
+		or samedata and itemInfo['unique'] and table_matches(slotdata.info or {}, info or {}) then -- support both non unique and unique item.
 			Player.PlayerData.items[slot].amount = Player.PlayerData.items[slot].amount + amount
 			Player.Functions.SetPlayerData("items", Player.PlayerData.items)
 
