@@ -409,7 +409,7 @@ end)
 RegisterNetEvent('inventory:client:ItemBox', function(itemData, type)
     SendNUIMessage({
         action = "itemBox",
-        item = itemData,
+        item = itemData.shared and itemData or {shared = itemData},
         type = type
     })
 end)

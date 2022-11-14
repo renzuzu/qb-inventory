@@ -2855,18 +2855,19 @@ var requiredItemOpen = false;
         } else if (data.type == "remove") {
             type = "Removed";
         }
-        //data.item.image = data.item.info?.image ? `images/${data.item?.info.image}.png` : data.item?.info?.imageurl ? data.item?.info?.imageurl : `images/${data.item.image}`
+        data.item.shared.label = data.item.info?.label ? data.item.info?.label : data.item.shared.label
+        data.item.shared.image = data.item.info?.image ? `images/${data.item.info?.image}.png` : data.item.info?.imageurl ? data.item.info?.imageurl : `images/${data.item.shared.image}`
         var $itembox = $(".itembox-container.template").clone();
         $itembox.removeClass("template");
         $itembox.html(
             '<div id="itembox-action"><p>' +
             type +
             '</p></div><div id="itembox-label"><p>' +
-            data.item.label?.image ? data.item?.info.label : data.item.label +
+            data.item.shared.label +
             '</p></div><div class="item-slot-img"><img src="' +
-            data.item.image +
+            data.item.shared.image +
             '" alt="' +
-            data.item.name +
+            data.item.shared.name +
             '" /></div>'
         );
         $(".itemboxes-container").prepend($itembox);

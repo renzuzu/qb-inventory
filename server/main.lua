@@ -1501,7 +1501,7 @@ RegisterNetEvent('inventory:server:UseItemSlot', function(slot)
 	local src = source
 	local itemData = GetItemBySlot(src, slot)
 	if not itemData then return end
-	local itemInfo = QBCore.Shared.Items[itemData.name]
+	local itemInfo = {shared = QBCore.Shared.Items[itemData.name], info = itemData.info}
 	if itemData.type == "weapon" then
 		TriggerClientEvent("inventory:client:UseWeapon", src, itemData, itemData.info.quality and itemData.info.quality > 0)
 		TriggerClientEvent('inventory:client:ItemBox', src, itemInfo, "use")
@@ -1516,7 +1516,7 @@ RegisterNetEvent('inventory:server:UseItem', function(inventory, item)
 	if inventory ~= "player" and inventory ~= "hotbar" then return end
 	local itemData = GetItemBySlot(src, item.slot)
 	if not itemData then return end
-	local itemInfo = QBCore.Shared.Items[itemData.name]
+	local itemInfo = {shared = QBCore.Shared.Items[itemData.name], info = itemData.info}
 	if itemData.type == "weapon" then
 		TriggerClientEvent("inventory:client:UseWeapon", src, itemData, itemData.info.quality and itemData.info.quality > 0)
 		TriggerClientEvent('inventory:client:ItemBox', src, itemInfo, "use")
@@ -2069,10 +2069,12 @@ RegisterServerEvent("inventory:server:GiveItem", function(target, name, amount, 
 		end
 		if RemoveItem(src, item.name, amount, item.slot) then
 			if AddItem(target, item.name, amount, false, item.info) then
-				TriggerClientEvent('inventory:client:ItemBox',target, QBCore.Shared.Items[item.name], "add")
+				local itemInfo = {shared = QBCore.Shared.Items[item.name]}
+				itemInfo.info = item.info
+				TriggerClientEvent('inventory:client:ItemBox',target, itemInfo, "add")
 				QBCore.Functions.Notify(target, Lang:t("notify.gitemrec")..amount..' '..item.label..Lang:t("notify.gitemfrom")..Player.PlayerData.charinfo.firstname.." "..Player.PlayerData.charinfo.lastname)
 				TriggerClientEvent("inventory:client:UpdatePlayerInventory", target, true)
-				TriggerClientEvent('inventory:client:ItemBox',src, QBCore.Shared.Items[item.name], "remove")
+				TriggerClientEvent('inventory:client:ItemBox',src, itemInfo, "remove")
 				QBCore.Functions.Notify(src, Lang:t("notify.gitemyg") .. OtherPlayer.PlayerData.charinfo.firstname.." "..OtherPlayer.PlayerData.charinfo.lastname.. " " .. amount .. " " .. item.label .."!")
 				TriggerClientEvent("inventory:client:UpdatePlayerInventory", src, true)
 				TriggerClientEvent('qb-inventory:client:giveAnim', src)
