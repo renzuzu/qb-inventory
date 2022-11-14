@@ -676,21 +676,40 @@ exports('AddToStash',AddToStash)
 ---@param slot number Slot to remove the item from
 ---@param itemName string Name of the item to remove
 ---@param amount? number The amount to remove
-local function RemoveFromStash(stashId, slot, itemName, amount)
+local function RemoveFromStash(stashId, slot, itemName, amount, info)
 	amount = tonumber(amount) or 1
-	if Stashes[stashId].items[slot] and Stashes[stashId].items[slot].name == itemName then
-		if Stashes[stashId].items[slot].amount > amount then
-			Stashes[stashId].items[slot].amount = Stashes[stashId].items[slot].amount - amount
+	if Stashes[stashId] and slot and not info then -- original method. remove item with slot
+		if Stashes[stashId].items[slot] and Stashes[stashId].items[slot].name == itemName then
+			if Stashes[stashId].items[slot].amount > amount then
+				Stashes[stashId].items[slot].amount = Stashes[stashId].items[slot].amount - amount
+			else
+				Stashes[stashId].items[slot] = nil
+			end
 		else
 			Stashes[stashId].items[slot] = nil
+			if Stashes[stashId].items == nil then
+				Stashes[stashId].items[slot] = nil
+			end
 		end
-	else
-		Stashes[stashId].items[slot] = nil
-		if Stashes[stashId].items == nil then
-			Stashes[stashId].items[slot] = nil
+	elseif Stashes[stashId] and info then -- search item by info before removing. condition check with `and info` can be removed but this is safer
+		for slot,v in pairs(Stashes[stashId].items) do
+			if v.name == itemName and table_matches(v.info, info) then
+				if v.amount > amount then
+					Stashes[stashId].items[slot].amount = Stashes[stashId].items[slot].amount - amount
+				else
+					Stashes[stashId].items[slot] = nil
+				end
+			else
+				Stashes[stashId].items[slot] = nil
+				if Stashes[stashId].items == nil then
+					Stashes[stashId].items[slot] = nil
+				end
+			end
 		end
 	end
 end
+
+exports('RemoveFromStash', RemoveFromStash)
 
 ---Get the items in the trunk of a vehicle
 ---@param plate string The plate of the vehicle to check
