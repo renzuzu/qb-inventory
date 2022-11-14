@@ -1159,6 +1159,25 @@ function optionSwitch(
     );
 }
 
+function table_matches(t1, t2) {
+	let type1 = typeof(t1)
+    let type2 = typeof(t2)
+	if (type1 !== type2) { return false }
+	if (type1 !== 'object' && type2 !== 'object') { return t1 == t2 }
+
+    for (const i in t1) {
+        let v2 = t2[i]
+	    if (v2 == undefined || !table_matches(t1[i],v2)) { return false }
+    }
+
+    for (const i in t2) {
+        let v1 = t1[i]
+	    if (v1 == undefined || !table_matches(v1,t2[i])) { return false }
+    }
+	return true
+}
+
+
 function swap($fromSlot, $toSlot, $fromInv, $toInv, $toAmount) {
     fromData = $fromInv.find("[data-slot=" + $fromSlot + "]").data("item");
     toData = $toInv.find("[data-slot=" + $toSlot + "]").data("item");
@@ -1200,6 +1219,10 @@ function swap($fromSlot, $toSlot, $fromInv, $toInv, $toAmount) {
             toData.name == fromData.name &&
             !fromData.unique
         ) {
+            if (fromData.info && toData.info && !table_matches(toData.info, fromData.info)) {
+                InventoryError($fromInv, $fromSlot);
+                return;
+            }
             var newData = [];
             toData.image = toData.info?.image ? `images/${toData.info?.image}.png` : toData.info?.imageurl ? toData.info?.imageurl : `images/${toData.image}`;
             newData.name = toData.name;
@@ -1583,6 +1606,10 @@ function swap($fromSlot, $toSlot, $fromInv, $toInv, $toAmount) {
         } else {
             if (fromData.amount == $toAmount) {
                 if (toData && toData.unique){            
+                    InventoryError($fromInv, $fromSlot);
+                    return;
+                }
+                if (fromData && fromData.info && toData && toData.info && !table_matches(toData.info, fromData.info)) {
                     InventoryError($fromInv, $fromSlot);
                     return;
                 }
