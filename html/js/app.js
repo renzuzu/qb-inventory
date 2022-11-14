@@ -381,7 +381,8 @@ $(document).on("click", "#weapon-attachments", function(e) {
     }
 });
 
-function FormatItemInfo(itemData) {
+function FormatItemInfo(data) {
+    let itemData = data
     if (itemData != null && itemData.info != "") {
         if (itemData.name == "id_card") {
             var gender = "Man";
@@ -570,12 +571,14 @@ function FormatItemInfo(itemData) {
             $(".item-info-title").html("<p>" + itemData.label + "</p>");
             $(".item-info-description").html("<p>Lab: " + itemData.info.lab + "</p>");
         } else {
-            $(".item-info-title").html("<p>" + itemData.label + "</p>");
-            $(".item-info-description").html("<p>" + itemData.description + "</p>");
+            $(".item-info-title").html("<p>" + itemData.info?.label ? itemData.info?.label : itemData.label + "</p>");
+            $(".item-info-description").html("<p>" + itemData.info?.description ? itemData.info?.description : itemData.description +
+            + "</p>");
         }
     } else {
         $(".item-info-title").html("<p>" + itemData.label + "</p>");
-        $(".item-info-description").html("<p>" + itemData.description + "</p>");
+        $(".item-info-description").html("<p>" + itemData.description || '' +
+        + "</p>");
     }
 }
 
@@ -804,11 +807,13 @@ function updateweights($fromSlot, $toSlot, $fromInv, $toInv, $toAmount) {
             $toInv.attr("data-inventory") == "crafting")
     ) {
         itemData = $fromInv.find("[data-slot=" + $fromSlot + "]").data("item");
+        itemData.image = itemData.info?.image ? `images/${itemData.info.image}.png` : itemData.info?.imageurl ? itemData.info.imageurl : `images/'${itemData.image}`
+        itemData.label = itemData.info?.label ? itemData.info.label : itemData.label
         if ($fromInv.attr("data-inventory").split("-")[0] == "itemshop") {
             $fromInv
                 .find("[data-slot=" + $fromSlot + "]")
                 .html(
-                    '<div class="item-slot-img"><img src="images/' +
+                    '<div class="item-slot-img"><img src="' +
                     itemData.image +
                     '" alt="' +
                     itemData.name +
@@ -817,14 +822,14 @@ function updateweights($fromSlot, $toSlot, $fromInv, $toInv, $toAmount) {
                     ") $" +
                     itemData.price +
                     '</p></div><div class="item-slot-label"><p>' +
-                    itemData.label +
+                    itemData.label+
                     "</p></div>"
                 );
         } else {
             $fromInv
                 .find("[data-slot=" + $fromSlot + "]")
                 .html(
-                    '<div class="item-slot-img"><img src="images/' +
+                    '<div class="item-slot-img"><img src="' +
                     itemData.image +
                     '" alt="' +
                     itemData.name +
@@ -833,7 +838,7 @@ function updateweights($fromSlot, $toSlot, $fromInv, $toInv, $toAmount) {
                     " (" +
                     ((itemData.weight * itemData.amount) / 1000).toFixed(1) +
                     ')</p></div><div class="item-slot-label"><p>' +
-                    itemData.label +
+                    itemData.label+
                     "</p></div>"
                 );
         }
@@ -848,11 +853,13 @@ function updateweights($fromSlot, $toSlot, $fromInv, $toInv, $toAmount) {
             $fromInv.attr("data-inventory") == "crafting")
     ) {
         itemData = $fromInv.find("[data-slot=" + $fromSlot + "]").data("item");
+        itemData.image = itemData.info?.image ? `images/${itemData.info.image}.png` : itemData.info?.imageurl ? itemData.info.imageurl : `images/${itemData.image}`
+        itemData.label = itemData.info?.label ? itemData.info.label : itemData.label
         if ($fromInv.attr("data-inventory").split("-")[0] == "itemshop") {
             $fromInv
                 .find("[data-slot=" + $fromSlot + "]")
                 .html(
-                    '<div class="item-slot-img"><img src="images/' +
+                    '<div class="item-slot-img"><img src="' +
                     itemData.image +
                     '" alt="' +
                     itemData.name +
@@ -861,14 +868,14 @@ function updateweights($fromSlot, $toSlot, $fromInv, $toInv, $toAmount) {
                     ") $" +
                     itemData.price +
                     '</p></div><div class="item-slot-label"><p>' +
-                    itemData.label +
+                    itemData.label+
                     "</p></div>"
                 );
         } else {
             $fromInv
                 .find("[data-slot=" + $fromSlot + "]")
                 .html(
-                    '<div class="item-slot-img"><img src="images/' +
+                    '<div class="item-slot-img"><img src="' +
                     itemData.image +
                     '" alt="' +
                     itemData.name +
@@ -877,7 +884,7 @@ function updateweights($fromSlot, $toSlot, $fromInv, $toInv, $toAmount) {
                     " (" +
                     ((itemData.weight * itemData.amount) / 1000).toFixed(1) +
                     ')</p></div><div class="item-slot-label"><p>' +
-                    itemData.label +
+                    itemData.label+
                     "</p></div>"
                 );
         }
@@ -891,11 +898,13 @@ function updateweights($fromSlot, $toSlot, $fromInv, $toInv, $toAmount) {
         $toInv.attr("data-inventory") == "crafting"
     ) {
         itemData = $toInv.find("[data-slot=" + $toSlot + "]").data("item");
+        itemData.image = itemData.info?.image ? `images/${itemData.info.image}.png` : itemData.info?.imageurl ? itemData.info.imageurl : `images/${itemData.image}`
+        itemData.label = itemData.info?.label ? itemData.info.label : itemData.label
         if ($toInv.attr("data-inventory").split("-")[0] == "itemshop") {
             $toInv
                 .find("[data-slot=" + $toSlot + "]")
                 .html(
-                    '<div class="item-slot-img"><img src="images/' +
+                    '<div class="item-slot-img"><img src="' +
                     itemData.image +
                     '" alt="' +
                     itemData.name +
@@ -904,14 +913,14 @@ function updateweights($fromSlot, $toSlot, $fromInv, $toInv, $toAmount) {
                     ") $" +
                     itemData.price +
                     '</p></div><div class="item-slot-label"><p>' +
-                    itemData.label +
+                    itemData.label+
                     "</p></div>"
                 );
         } else {
             $toInv
                 .find("[data-slot=" + $toSlot + "]")
                 .html(
-                    '<div class="item-slot-img"><img src="images/' +
+                    '<div class="item-slot-img"><img src="' +
                     itemData.image +
                     '" alt="' +
                     itemData.name +
@@ -920,7 +929,7 @@ function updateweights($fromSlot, $toSlot, $fromInv, $toInv, $toAmount) {
                     " (" +
                     ((itemData.weight * itemData.amount) / 1000).toFixed(1) +
                     ')</p></div><div class="item-slot-label"><p>' +
-                    itemData.label +
+                    itemData.label+
                     "</p></div>"
                 );
         }
@@ -1051,7 +1060,7 @@ function optionSwitch(
     fromData
 ) {
     fromData.slot = parseInt($toSlot);
-
+    //fromData.image = fromData.info?.image ? `images/${fromData.info.image}.png` : fromData.info?.imageurl ? fromData.info.imageurl : `images/${fromData.image}`
     $toInv.find("[data-slot=" + $toSlot + "]").data("item", fromData);
 
     $toInv.find("[data-slot=" + $toSlot + "]").addClass("item-drag");
@@ -1063,7 +1072,7 @@ function optionSwitch(
             .html(
                 '<div class="item-slot-key"><p>' +
                 $toSlot +
-                '</p></div><div class="item-slot-img"><img src="images/' +
+                '</p></div><div class="item-slot-img"><img src="' +
                 fromData.image +
                 '" alt="' +
                 fromData.name +
@@ -1079,7 +1088,7 @@ function optionSwitch(
         $toInv
             .find("[data-slot=" + $toSlot + "]")
             .html(
-                '<div class="item-slot-img"><img src="images/' +
+                '<div class="item-slot-img"><img src="' +
                 fromData.image +
                 '" alt="' +
                 fromData.name +
@@ -1094,6 +1103,7 @@ function optionSwitch(
     }
 
     toData.slot = parseInt($fromSlot);
+    toData.image = toData.info?.image ? `images/${toData.info.image}.png` : toData.info?.imageurl ? toData.info.imageurl : `images/${toData.image}`
 
     $fromInv.find("[data-slot=" + $fromSlot + "]").addClass("item-drag");
     $fromInv.find("[data-slot=" + $fromSlot + "]").removeClass("item-nodrag");
@@ -1106,7 +1116,7 @@ function optionSwitch(
             .html(
                 '<div class="item-slot-key"><p>' +
                 $fromSlot +
-                '</p></div><div class="item-slot-img"><img src="images/' +
+                '</p></div><div class="item-slot-img"><img src="' +
                 toData.image +
                 '" alt="' +
                 toData.name +
@@ -1122,7 +1132,7 @@ function optionSwitch(
         $fromInv
             .find("[data-slot=" + $fromSlot + "]")
             .html(
-                '<div class="item-slot-img"><img src="images/' +
+                '<div class="item-slot-img"><img src="' +
                 toData.image +
                 '" alt="' +
                 toData.name +
@@ -1153,7 +1163,6 @@ function swap($fromSlot, $toSlot, $fromInv, $toInv, $toAmount) {
     fromData = $fromInv.find("[data-slot=" + $fromSlot + "]").data("item");
     toData = $toInv.find("[data-slot=" + $toSlot + "]").data("item");
     var otherinventory = otherLabel.toLowerCase();
-
     if (otherinventory.split("-")[0] == "dropped") {
         if (toData !== null && toData !== undefined) {
             InventoryError($fromInv, $fromSlot);
@@ -1166,7 +1175,6 @@ function swap($fromSlot, $toSlot, $fromInv, $toInv, $toAmount) {
             InventoryError($fromInv, $fromSlot);
             return;
         }
-
         if (
             ($fromInv.attr("data-inventory") == "player" ||
                 $fromInv.attr("data-inventory") == "hotbar") &&
@@ -1193,12 +1201,13 @@ function swap($fromSlot, $toSlot, $fromInv, $toInv, $toAmount) {
             !fromData.unique
         ) {
             var newData = [];
+            toData.image = toData.info?.image ? `images/${toData.info?.image}.png` : toData.info?.imageurl ? toData.info?.imageurl : `images/${toData.image}`;
             newData.name = toData.name;
-            newData.label = toData.label;
+            newData.label = toData.info?.label ? toData.info.label : toData.label;
             newData.amount = parseInt($toAmount) + parseInt(toData.amount);
+            newData.image = toData.image
             newData.type = toData.type;
-            newData.description = toData.description;
-            newData.image = toData.image;
+            newData.description = toData.info?.description ? toData.info.description : toData.description;
             newData.weight = toData.weight;
             newData.info = toData.info;
             newData.useable = toData.useable;
@@ -1228,7 +1237,7 @@ function swap($fromSlot, $toSlot, $fromInv, $toInv, $toAmount) {
                         .html(
                             '<div class="item-slot-key"><p>' +
                             $toSlot +
-                            '</p></div><div class="item-slot-img"><img src="images/' +
+                            '</p></div><div class="item-slot-img"><img src="' +
                             newData.image +
                             '" alt="' +
                             newData.name +
@@ -1243,7 +1252,7 @@ function swap($fromSlot, $toSlot, $fromInv, $toInv, $toAmount) {
                     $toInv
                         .find("[data-slot=" + $toSlot + "]")
                         .html(
-                            '<div class="item-slot-key"><p>6 <i class="fas fa-lock"></i></p></div><div class="item-slot-img"><img src="images/' +
+                            '<div class="item-slot-key"><p>6 <i class="fas fa-lock"></i></p></div><div class="item-slot-img"><img src="' +
                             newData.image +
                             '" alt="' +
                             newData.name +
@@ -1258,7 +1267,7 @@ function swap($fromSlot, $toSlot, $fromInv, $toInv, $toAmount) {
                     $toInv
                         .find("[data-slot=" + $toSlot + "]")
                         .html(
-                            '<div class="item-slot-img"><img src="images/' +
+                            '<div class="item-slot-img"><img src="' +
                             newData.image +
                             '" alt="' +
                             newData.name +
@@ -1316,11 +1325,11 @@ function swap($fromSlot, $toSlot, $fromInv, $toInv, $toAmount) {
             } else if (fromData.amount > $toAmount) {
                 var newDataFrom = [];
                 newDataFrom.name = fromData.name;
-                newDataFrom.label = fromData.label;
+                newDataFrom.label = fromData.info?.label ? fromData.info.label : fromData.label;
+                newDataFrom.image = fromData.image
                 newDataFrom.amount = parseInt(fromData.amount - $toAmount);
                 newDataFrom.type = fromData.type;
                 newDataFrom.description = fromData.description;
-                newDataFrom.image = fromData.image;
                 newDataFrom.weight = fromData.weight;
                 newDataFrom.price = fromData.price;
                 newDataFrom.info = fromData.info;
@@ -1350,7 +1359,7 @@ function swap($fromSlot, $toSlot, $fromInv, $toInv, $toAmount) {
                         .html(
                             '<div class="item-slot-key"><p>' +
                             $toSlot +
-                            '</p></div><div class="item-slot-img"><img src="images/' +
+                            '</p></div><div class="item-slot-img"><img src="' +
                             newData.image +
                             '" alt="' +
                             newData.name +
@@ -1365,7 +1374,7 @@ function swap($fromSlot, $toSlot, $fromInv, $toInv, $toAmount) {
                     $toInv
                         .find("[data-slot=" + $toSlot + "]")
                         .html(
-                            '<div class="item-slot-key"><p>6 <i class="fas fa-lock"></i></p></div><div class="item-slot-img"><img src="images/' +
+                            '<div class="item-slot-key"><p>6 <i class="fas fa-lock"></i></p></div><div class="item-slot-img"><img src="' +
                             newData.image +
                             '" alt="' +
                             newData.name +
@@ -1380,7 +1389,7 @@ function swap($fromSlot, $toSlot, $fromInv, $toInv, $toAmount) {
                     $toInv
                         .find("[data-slot=" + $toSlot + "]")
                         .html(
-                            '<div class="item-slot-img"><img src="images/' +
+                            '<div class="item-slot-img"><img src="' +
                             newData.image +
                             '" alt="' +
                             newData.name +
@@ -1439,7 +1448,7 @@ function swap($fromSlot, $toSlot, $fromInv, $toInv, $toAmount) {
                     $fromInv
                         .find("[data-slot=" + $fromSlot + "]")
                         .html(
-                            '<div class="item-slot-img"><img src="images/' +
+                            '<div class="item-slot-img"><img src="' +
                             newDataFrom.image +
                             '" alt="' +
                             newDataFrom.name +
@@ -1471,7 +1480,7 @@ function swap($fromSlot, $toSlot, $fromInv, $toInv, $toAmount) {
                             .html(
                                 '<div class="item-slot-key"><p>' +
                                 $fromSlot +
-                                '</p></div><div class="item-slot-img"><img src="images/' +
+                                '</p></div><div class="item-slot-img"><img src="' +
                                 newDataFrom.image +
                                 '" alt="' +
                                 newDataFrom.name +
@@ -1491,7 +1500,7 @@ function swap($fromSlot, $toSlot, $fromInv, $toInv, $toAmount) {
                         $fromInv
                             .find("[data-slot=" + $fromSlot + "]")
                             .html(
-                                '<div class="item-slot-key"><p>6 <i class="fas fa-lock"></i></p></div><div class="item-slot-img"><img src="images/' +
+                                '<div class="item-slot-key"><p>6 <i class="fas fa-lock"></i></p></div><div class="item-slot-img"><img src="' +
                                 newDataFrom.image +
                                 '" alt="' +
                                 newDataFrom.name +
@@ -1508,7 +1517,7 @@ function swap($fromSlot, $toSlot, $fromInv, $toInv, $toAmount) {
                         $fromInv
                             .find("[data-slot=" + $fromSlot + "]")
                             .html(
-                                '<div class="item-slot-img"><img src="images/' +
+                                '<div class="item-slot-img"><img src="' +
                                 newDataFrom.image +
                                 '" alt="' +
                                 newDataFrom.name +
@@ -1612,6 +1621,7 @@ function swap($fromSlot, $toSlot, $fromInv, $toInv, $toAmount) {
                 $toInv.find("[data-slot=" + $toSlot + "]").addClass("item-drag");
                 $toInv.find("[data-slot=" + $toSlot + "]").removeClass("item-nodrag");
 
+                fromData.label = fromData.info?.label ? fromData.info.label : fromData.label
                 var ItemLabel =
                     '<div class="item-slot-label"><p>' + fromData.label + "</p></div>";
                 if (fromData.name.split("_")[0] == "weapon") {
@@ -1622,14 +1632,13 @@ function swap($fromSlot, $toSlot, $fromInv, $toInv, $toAmount) {
                             "</p></div>";
                     }
                 }
-
                 if ($toSlot < 6 && $toInv.attr("data-inventory") == "player") {
                     $toInv
                         .find("[data-slot=" + $toSlot + "]")
                         .html(
                             '<div class="item-slot-key"><p>' +
                             $toSlot +
-                            '</p></div><div class="item-slot-img"><img src="images/' +
+                            '</p></div><div class="item-slot-img"><img src="' +
                             fromData.image +
                             '" alt="' +
                             fromData.name +
@@ -1644,7 +1653,7 @@ function swap($fromSlot, $toSlot, $fromInv, $toInv, $toAmount) {
                     $toInv
                         .find("[data-slot=" + $toSlot + "]")
                         .html(
-                            '<div class="item-slot-key"><p>6 <i class="fas fa-lock"></i></p></div><div class="item-slot-img"><img src="images/' +
+                            '<div class="item-slot-key"><p>6 <i class="fas fa-lock"></i></p></div><div class="item-slot-img"><img src="' +
                             fromData.image +
                             '" alt="' +
                             fromData.name +
@@ -1659,7 +1668,7 @@ function swap($fromSlot, $toSlot, $fromInv, $toInv, $toAmount) {
                     $toInv
                         .find("[data-slot=" + $toSlot + "]")
                         .html(
-                            '<div class="item-slot-img"><img src="images/' +
+                            '<div class="item-slot-img"><img src="' +
                             fromData.image +
                             '" alt="' +
                             fromData.name +
@@ -1718,6 +1727,7 @@ function swap($fromSlot, $toSlot, $fromInv, $toInv, $toAmount) {
 
                     $fromInv.find("[data-slot=" + $fromSlot + "]").data("item", toData);
 
+                    toData.label = toData.info?.label ? toData.info.label : toData.label
                     var ItemLabel =
                         '<div class="item-slot-label"><p>' + toData.label + "</p></div>";
                     if (toData.name.split("_")[0] == "weapon") {
@@ -1735,7 +1745,7 @@ function swap($fromSlot, $toSlot, $fromInv, $toInv, $toAmount) {
                             .html(
                                 '<div class="item-slot-key"><p>' +
                                 $fromSlot +
-                                '</p></div><div class="item-slot-img"><img src="images/' +
+                                '</p></div><div class="item-slot-img"><img src="' +
                                 toData.image +
                                 '" alt="' +
                                 toData.name +
@@ -1753,7 +1763,7 @@ function swap($fromSlot, $toSlot, $fromInv, $toInv, $toAmount) {
                         $fromInv
                             .find("[data-slot=" + $fromSlot + "]")
                             .html(
-                                '<div class="item-slot-key"><p>6 <i class="fas fa-lock"></i></p></div><div class="item-slot-img"><img src="images/' +
+                                '<div class="item-slot-key"><p>6 <i class="fas fa-lock"></i></p></div><div class="item-slot-img"><img src="' +
                                 toData.image +
                                 '" alt="' +
                                 toData.name +
@@ -1768,7 +1778,7 @@ function swap($fromSlot, $toSlot, $fromInv, $toInv, $toAmount) {
                         $fromInv
                             .find("[data-slot=" + $fromSlot + "]")
                             .html(
-                                '<div class="item-slot-img"><img src="images/' +
+                                '<div class="item-slot-img"><img src="' +
                                 toData.image +
                                 '" alt="' +
                                 toData.name +
@@ -1878,11 +1888,11 @@ function swap($fromSlot, $toSlot, $fromInv, $toInv, $toAmount) {
             ) {
                 var newDataTo = [];
                 newDataTo.name = fromData.name;
-                newDataTo.label = fromData.label;
+                newDataTo.label = fromData.info?.label ? fromData.info.label : fromData.label;
+                newDataTo.image = fromData.image
                 newDataTo.amount = parseInt($toAmount);
                 newDataTo.type = fromData.type;
                 newDataTo.description = fromData.description;
-                newDataTo.image = fromData.image;
                 newDataTo.weight = fromData.weight;
                 newDataTo.info = fromData.info;
                 newDataTo.useable = fromData.useable;
@@ -1911,7 +1921,7 @@ function swap($fromSlot, $toSlot, $fromInv, $toInv, $toAmount) {
                         .html(
                             '<div class="item-slot-key"><p>' +
                             $toSlot +
-                            '</p></div><div class="item-slot-img"><img src="images/' +
+                            '</p></div><div class="item-slot-img"><img src="' +
                             newDataTo.image +
                             '" alt="' +
                             newDataTo.name +
@@ -1926,7 +1936,7 @@ function swap($fromSlot, $toSlot, $fromInv, $toInv, $toAmount) {
                     $toInv
                         .find("[data-slot=" + $toSlot + "]")
                         .html(
-                            '<div class="item-slot-key"><p>6 <i class="fas fa-lock"></i></p></div><div class="item-slot-img"><img src="images/' +
+                            '<div class="item-slot-key"><p>6 <i class="fas fa-lock"></i></p></div><div class="item-slot-img"><img src="' +
                             newDataTo.image +
                             '" alt="' +
                             newDataTo.name +
@@ -1941,7 +1951,7 @@ function swap($fromSlot, $toSlot, $fromInv, $toInv, $toAmount) {
                     $toInv
                         .find("[data-slot=" + $toSlot + "]")
                         .html(
-                            '<div class="item-slot-img"><img src="images/' +
+                            '<div class="item-slot-img"><img src="' +
                             newDataTo.image +
                             '" alt="' +
                             newDataTo.name +
@@ -1992,11 +2002,11 @@ function swap($fromSlot, $toSlot, $fromInv, $toInv, $toAmount) {
 
                 var newDataFrom = [];
                 newDataFrom.name = fromData.name;
-                newDataFrom.label = fromData.label;
+                newDataFrom.label = fromData.info?.label ? fromData.info.label : fromData.label;
+                newDataFrom.image = fromData.image
                 newDataFrom.amount = parseInt(fromData.amount - $toAmount);
                 newDataFrom.type = fromData.type;
                 newDataFrom.description = fromData.description;
-                newDataFrom.image = fromData.image;
                 newDataFrom.weight = fromData.weight;
                 newDataFrom.price = fromData.price;
                 newDataFrom.info = fromData.info;
@@ -2017,7 +2027,7 @@ function swap($fromSlot, $toSlot, $fromInv, $toInv, $toAmount) {
                     $fromInv
                         .find("[data-slot=" + $fromSlot + "]")
                         .html(
-                            '<div class="item-slot-img"><img src="images/' +
+                            '<div class="item-slot-img"><img src="' +
                             newDataFrom.image +
                             '" alt="' +
                             newDataFrom.name +
@@ -2049,7 +2059,7 @@ function swap($fromSlot, $toSlot, $fromInv, $toInv, $toAmount) {
                             .html(
                                 '<div class="item-slot-key"><p>' +
                                 $fromSlot +
-                                '</p></div><div class="item-slot-img"><img src="images/' +
+                                '</p></div><div class="item-slot-img"><img src="' +
                                 newDataFrom.image +
                                 '" alt="' +
                                 newDataFrom.name +
@@ -2069,7 +2079,7 @@ function swap($fromSlot, $toSlot, $fromInv, $toInv, $toAmount) {
                         $fromInv
                             .find("[data-slot=" + $fromSlot + "]")
                             .html(
-                                '<div class="item-slot-key"><p>6 <i class="fas fa-lock"></i></p></div><div class="item-slot-img"><img src="images/' +
+                                '<div class="item-slot-key"><p>6 <i class="fas fa-lock"></i></p></div><div class="item-slot-img"><img src="' +
                                 newDataFrom.image +
                                 '" alt="' +
                                 newDataFrom.name +
@@ -2086,7 +2096,7 @@ function swap($fromSlot, $toSlot, $fromInv, $toInv, $toAmount) {
                         $fromInv
                             .find("[data-slot=" + $fromSlot + "]")
                             .html(
-                                '<div class="item-slot-img"><img src="images/' +
+                                '<div class="item-slot-img"><img src="' +
                                 newDataFrom.image +
                                 '" alt="' +
                                 newDataFrom.name +
@@ -2370,6 +2380,8 @@ var requiredItemOpen = false;
             $.each(data.inventory, function(i, item) {
                 if (item != null) {
                     totalWeight += item.weight * item.amount;
+                    item.image = item.info?.image ? `images/${item.info.image}.png` : item.info?.imageurl ? item.info.imageurl : `images/${item.image}`
+                    item.label = item.info?.label ? item.info.label : item.label
                     var ItemLabel =
                         '<div class="item-slot-label"><p>' + item.label + "</p></div>";
                     if (item.name.split("_")[0] == "weapon") {
@@ -2389,7 +2401,7 @@ var requiredItemOpen = false;
                             .html(
                                 '<div class="item-slot-key"><p>' +
                                 item.slot +
-                                '</p></div><div class="item-slot-img"><img src="images/' +
+                                '</p></div><div class="item-slot-img"><img src="' +
                                 item.image +
                                 '" alt="' +
                                 item.name +
@@ -2410,7 +2422,7 @@ var requiredItemOpen = false;
                         $(".player-inventory")
                             .find("[data-slot=" + item.slot + "]")
                             .html(
-                                '<div class="item-slot-key"><p>6 <i class="fas fa-lock"></i></p></div><div class="item-slot-img"><img src="images/' +
+                                '<div class="item-slot-key"><p>6 <i class="fas fa-lock"></i></p></div><div class="item-slot-img"><img src="' +
                                 item.image +
                                 '" alt="' +
                                 item.name +
@@ -2431,7 +2443,7 @@ var requiredItemOpen = false;
                         $(".player-inventory")
                             .find("[data-slot=" + item.slot + "]")
                             .html(
-                                '<div class="item-slot-img"><img src="images/' +
+                                '<div class="item-slot-img"><img src="' +
                                 item.image +
                                 '" alt="' +
                                 item.name +
@@ -2459,6 +2471,8 @@ var requiredItemOpen = false;
             $.each(data.other.inventory, function(i, item) {
                 if (item != null) {
                     totalWeightOther += item.weight * item.amount;
+                    item.image = item.info?.image ? `images/${item?.info.image}.png` : item?.info?.imageurl ? item?.info?.imageurl : `images/${item.image}`
+                    item.label = item.info?.label ? item.info.label : item.label
                     var ItemLabel =
                         '<div class="item-slot-label"><p>' + item.label + "</p></div>";
                     if (item.name.split("_")[0] == "weapon") {
@@ -2476,7 +2490,7 @@ var requiredItemOpen = false;
                         $(".other-inventory")
                             .find("[data-slot=" + item.slot + "]")
                             .html(
-                                '<div class="item-slot-img"><img src="images/' +
+                                '<div class="item-slot-img"><img src="' +
                                 item.image +
                                 '" alt="' +
                                 item.name +
@@ -2491,7 +2505,7 @@ var requiredItemOpen = false;
                         $(".other-inventory")
                             .find("[data-slot=" + item.slot + "]")
                             .html(
-                                '<div class="item-slot-img"><img src="images/' +
+                                '<div class="item-slot-img"><img src="' +
                                 item.image +
                                 '" alt="' +
                                 item.name +
@@ -2628,6 +2642,8 @@ var requiredItemOpen = false;
         $.each(data.inventory, function(i, item) {
             if (item != null) {
                 totalWeight += item.weight * item.amount;
+                item.image = item.info?.image ? `images/${item.info.image}.png` : item.info?.imageurl ? item.info.imageurl : `images/${item.image}`
+                item.label = item.info?.label ? item.info.label : item.label
                 if (item.slot < 6) {
                     $(".player-inventory")
                         .find("[data-slot=" + item.slot + "]")
@@ -2637,7 +2653,7 @@ var requiredItemOpen = false;
                         .html(
                             '<div class="item-slot-key"><p>' +
                             item.slot +
-                            '</p></div><div class="item-slot-img"><img src="images/' +
+                            '</p></div><div class="item-slot-img"><img src="' +
                             item.image +
                             '" alt="' +
                             item.name +
@@ -2659,7 +2675,7 @@ var requiredItemOpen = false;
                     $(".player-inventory")
                         .find("[data-slot=" + item.slot + "]")
                         .html(
-                            '<div class="item-slot-key"><p>6 <i class="fas fa-lock"></i></p></div><div class="item-slot-img"><img src="images/' +
+                            '<div class="item-slot-key"><p>6 <i class="fas fa-lock"></i></p></div><div class="item-slot-img"><img src="' +
                             item.image +
                             '" alt="' +
                             item.name +
@@ -2681,7 +2697,7 @@ var requiredItemOpen = false;
                     $(".player-inventory")
                         .find("[data-slot=" + item.slot + "]")
                         .html(
-                            '<div class="item-slot-img"><img src="images/' +
+                            '<div class="item-slot-img"><img src="' +
                             item.image +
                             '" alt="' +
                             item.name +
@@ -2727,6 +2743,8 @@ var requiredItemOpen = false;
             $(".z-hotbar-inventory").append(elem);
             $.each(data.items, function(i, item) {
                 if (item != null) {
+                    item.image = item.info?.image ? `images/${item.info.image}.png` : item.info?.imageurl ? item.info.imageurl : `images/${item.image}`
+                    item.label = item.info?.label ? item.info.label : item.label
                     var ItemLabel =
                         '<div class="item-slot-label"><p>' + item.label + "</p></div>";
                     if (item.name.split("_")[0] == "weapon") {
@@ -2741,7 +2759,7 @@ var requiredItemOpen = false;
                         $(".z-hotbar-inventory")
                             .find("[data-zhotbarslot=" + item.slot + "]")
                             .html(
-                                '<div class="z-hotbar-item-slot-key"><p>6 <i class="fas fa-lock"></i></p></div><div class="z-hotbar-item-slot-img"><img src="images/' +
+                                '<div class="z-hotbar-item-slot-key"><p>6 <i class="fas fa-lock"></i></p></div><div class="z-hotbar-item-slot-img"><img src="' +
                                 item.image +
                                 '" alt="' +
                                 item.name +
@@ -2758,7 +2776,7 @@ var requiredItemOpen = false;
                             .html(
                                 '<div class="z-hotbar-item-slot-key"><p>' +
                                 item.slot +
-                                '</p></div><div class="z-hotbar-item-slot-img"><img src="images/' +
+                                '</p></div><div class="z-hotbar-item-slot-img"><img src="' +
                                 item.image +
                                 '" alt="' +
                                 item.name +
@@ -2787,8 +2805,8 @@ var requiredItemOpen = false;
         $("#itembox-action").html("<p>Used</p>");
         $("#itembox-label").html("<p>" + data.item.label + "</p>");
         $("#itembox-image").html(
-            '<div class="item-slot-img"><img src="images/' +
-            data.item.image +
+            '<div class="item-slot-img"><img src="' +
+            data.item.info?.image ? `images/${data.item?.info.image}.png` : data.item?.info?.imageurl ? data.item?.info?.imageurl : `images/${data.item.image}` +
             '" alt="' +
             data.item.name +
             '" /></div>'
@@ -2811,15 +2829,15 @@ var requiredItemOpen = false;
         } else if (data.type == "remove") {
             type = "Removed";
         }
-
+        //data.item.image = data.item.info?.image ? `images/${data.item?.info.image}.png` : data.item?.info?.imageurl ? data.item?.info?.imageurl : `images/${data.item.image}`
         var $itembox = $(".itembox-container.template").clone();
         $itembox.removeClass("template");
         $itembox.html(
             '<div id="itembox-action"><p>' +
             type +
             '</p></div><div id="itembox-label"><p>' +
-            data.item.label +
-            '</p></div><div class="item-slot-img"><img src="images/' +
+            data.item.label?.image ? data.item?.info.label : data.item.label +
+            '</p></div><div class="item-slot-img"><img src="' +
             data.item.image +
             '" alt="' +
             data.item.name +
@@ -2845,7 +2863,7 @@ var requiredItemOpen = false;
                     var element =
                         '<div class="requiredItem-box"><div id="requiredItem-action">Required</div><div id="requiredItem-label"><p>' +
                         item.label +
-                        '</p></div><div id="requiredItem-image"><div class="item-slot-img"><img src="images/' +
+                        '</p></div><div id="requiredItem-image"><div class="item-slot-img"><img src="' +
                         item.image +
                         '" alt="' +
                         item.name +
