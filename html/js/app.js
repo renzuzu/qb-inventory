@@ -571,14 +571,13 @@ function FormatItemInfo(data) {
             $(".item-info-title").html("<p>" + itemData.label + "</p>");
             $(".item-info-description").html("<p>Lab: " + itemData.info.lab + "</p>");
         } else {
-            $(".item-info-title").html("<p>" + itemData.info?.label ? itemData.info?.label : itemData.label + "</p>");
-            $(".item-info-description").html("<p>" + itemData.info?.description ? itemData.info?.description : itemData.description +
-            + "</p>");
+            let itemlabel = itemData.info?.label ? itemData.info?.label : itemData.label
+            $(".item-info-title").html("<p>" + itemlabel + "</p>");
+            $(".item-info-description").html("<p>" + itemData.info?.description ? itemData.info?.description : itemData.description + "</p>");
         }
     } else {
         $(".item-info-title").html("<p>" + itemData.label + "</p>");
-        $(".item-info-description").html("<p>" + itemData.description || '' +
-        + "</p>");
+        $(".item-info-description").html("<p>" + itemData.description || '' + "</p>");
     }
 }
 
