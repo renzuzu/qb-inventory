@@ -669,6 +669,8 @@ local function AddToStash(stashId, slot, otherslot, itemName, amount, info)
 	end
 end
 
+exports('AddToStash',AddToStash)
+
 ---Remove the item from the stash
 ---@param stashId string Stash id to remove the item from
 ---@param slot number Slot to remove the item from
