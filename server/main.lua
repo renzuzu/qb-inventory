@@ -595,6 +595,25 @@ end
 
 exports('GetStashItems', GetStashItems)
 
+local function RegisterStash(stashId)
+	if not Stashes[stashId] then
+		local stashItems = GetStashItems(stashId)
+		if next(stashItems) then
+			Stashes[stashId] = {}
+			Stashes[stashId].items = stashItems
+			Stashes[stashId].isOpen = false
+			Stashes[stashId].label = stashId
+		else
+			Stashes[stashId] = {}
+			Stashes[stashId].items = {}
+			Stashes[stashId].isOpen = false
+			Stashes[stashId].label = stashId
+		end
+	end
+end
+
+exports('RegisterStash', RegisterStash)
+
 ---Save the items in a stash
 ---@param stashId string The stash id to save the items from
 ---@param items table items to save
