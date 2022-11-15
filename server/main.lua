@@ -215,6 +215,23 @@ end
 
 exports("AddItem", AddItem)
 
+local function GetItemByInfo(source, item, info)
+	local Player = QBCore.Functions.GetPlayer(source)
+	item = tostring(item):lower()
+	local items = {}
+	local slots = GetSlotsByItem(Player.PlayerData.items, item)
+	for _, slot in pairs(slots) do
+		if slot then
+			local itemdata = Player.PlayerData.items[slot]
+			if table_matches(itemdata.info, info) then
+				return slot, itemdata
+			end
+		end
+	end
+end
+
+exports("GetItemByInfo", GetItemByInfo)
+
 ---Remove an item from the inventory of the player
 ---@param source number The source of the player
 ---@param item string The item to remove from the inventory
@@ -229,7 +246,7 @@ local function RemoveItem(source, item, amount, slot, info)
 	slot = tonumber(slot)
 	if info then
 		slot , itemdata = GetItemByInfo(source, item, info)
-		amount = tonumber(itemdata.amount) or 1
+		amount = tonumber(amount) or 1
 	end
 	if slot then
 		if Player.PlayerData.items[slot].amount > amount then
@@ -327,23 +344,6 @@ local function GetItemsByName(source, item)
 end
 
 exports("GetItemsByName", GetItemsByName)
-
-local function GetItemByInfo(source, item, info)
-	local Player = QBCore.Functions.GetPlayer(source)
-	item = tostring(item):lower()
-	local items = {}
-	local slots = GetSlotsByItem(Player.PlayerData.items, item)
-	for _, slot in pairs(slots) do
-		if slot then
-			local itemdata = Player.PlayerData.items[slot]
-			if table_matches(itemdata.info, info) then
-				return slot, itemdata
-			end
-		end
-	end
-end
-
-exports("GetItemByInfo", GetItemByInfo)
 
 ---Clear the inventory of the player with the provided source and filter any items out of the clearing of the inventory to keep (optional)
 ---@param source number Source of the player to clear the inventory from
