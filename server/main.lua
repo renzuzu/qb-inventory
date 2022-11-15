@@ -604,7 +604,6 @@ local function SaveStashItems(stashId, items)
 	for _, item in pairs(items) do
 		item.description = nil
 	end
-
 	MySQL.insert('INSERT INTO stashitems (stash, items) VALUES (:stash, :items) ON DUPLICATE KEY UPDATE items = :items', {
 		['stash'] = stashId,
 		['items'] = json.encode(items)
@@ -701,15 +700,10 @@ local function RemoveFromStash(stashId, slot, itemName, amount, info)
 		end
 	elseif Stashes[stashId] and info then -- search item by info before removing. condition check with `and info` can be removed but this is safer
 		for slot,v in pairs(Stashes[stashId].items) do
-			if v.name == itemName and table_matches(v.info, info) then
+			if v.name == itemName and table_matches(v.info or {}, info or {}) then
 				if v.amount > amount then
 					Stashes[stashId].items[slot].amount = Stashes[stashId].items[slot].amount - amount
 				else
-					Stashes[stashId].items[slot] = nil
-				end
-			else
-				Stashes[stashId].items[slot] = nil
-				if Stashes[stashId].items == nil then
 					Stashes[stashId].items[slot] = nil
 				end
 			end
