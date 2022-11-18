@@ -136,7 +136,7 @@ exports("GetSlotsByItem", GetSlotsByItem)
 local function GetFirstSlotByItem(items, itemName, info)
     if not items then return nil end
     for slot, item in pairs(items) do
-        if item.name:lower() == itemName:lower() and not info and table_matches(info or {}, item.info or {}) or item.name:lower() == itemName:lower() and info and table_matches(info, item.info) then
+        if item.name:lower() == itemName:lower() and not info and table_matches(info or {}, item.info or {}) or item.name:lower() == itemName:lower() and info and table_matches(info or {}, item.info or {}) then
             return tonumber(slot)
         end
     end
@@ -571,9 +571,9 @@ local function GetStashItems(stashId)
 		stashItems = Stashes[stashId].items
 	end
 	if not stashItems then return items end
-
+	local sharedItems = QBCore.Shared.Items
 	for _, item in pairs(stashItems) do
-		local itemInfo = QBCore.Shared.Items[item.name:lower()]
+		local itemInfo = sharedItems[item.name:lower()]
 		if itemInfo then
 			items[item.slot] = {
 				name = itemInfo["name"],
