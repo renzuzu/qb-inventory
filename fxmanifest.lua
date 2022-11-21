@@ -24,6 +24,7 @@ ui_page {
 files {
     'html/ui.html',
     'html/css/main.css',
+    'html/css/default.png',
     'html/js/app.js',
     'html/images/*.png',
     'html/images/*.jpg',

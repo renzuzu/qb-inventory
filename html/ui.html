@@ -19,11 +19,16 @@
             <div class="inventory-info">
                 <div class="player-inv-info">
                     <span id="player-inv-label">Player Inventory</span><br>
-                    <span id="player-inv-weight"></span>
+                    <!-- <span id="player-inv-weight"></span> -->
+                    <div id="prog_container">
+                        <div id="playerweight"></div>
+                    </div>
                 </div>
                 <div class="other-inv-info">
                     <span id="other-inv-label"></span><br>
-                    <span id="other-inv-weight"></span>
+                    <div id="prog_container">
+                        <div id="otherweight"></div>
+                    </div>
                 </div>
             </div>
             <div class="inv-container">
@@ -31,6 +36,7 @@
                     <div class="player-inventory" data-inventory="player"></div>
                 </div>
                 <div class="inv-options">
+                    <div style="position: relative;margin: auto;width: 80%;"><img src="https://forum.cfx.re/uploads/default/original/4X/b/1/9/b196908c7e5dfcd60aa9dca0020119fa55e184cb.png" style="height: 80px;"></div>
                     <div class="inv-options-list">
                         <input type="number" id="item-amount" class="inv-option-item" min=1 max="10000" placeholder="Amount" pattern="[0-9]" onfocus="this.value=''" placeholder="" oninput="validity.valid||(value='');"></input>
                         <div class="inv-option-item" id="item-use"><p>USE</p></div>
