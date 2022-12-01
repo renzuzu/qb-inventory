@@ -641,6 +641,9 @@ end
 local function AddToStash(stashId, slot, otherslot, itemName, amount, info)
 	amount = tonumber(amount) or 1
 	local ItemData = QBCore.Shared.Items[itemName]
+	
+	if not ItemData then print("[qb-inventory] Item: " .. itemName .. " does not exist.") return end
+	
 	if not ItemData.unique then
 		if Stashes[stashId].items[slot] and Stashes[stashId].items[slot].name == itemName then
 			Stashes[stashId].items[slot].amount = Stashes[stashId].items[slot].amount + amount
