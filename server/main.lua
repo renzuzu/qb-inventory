@@ -136,7 +136,7 @@ exports("GetSlotsByItem", GetSlotsByItem)
 local function GetFirstSlotByItem(items, itemName, info)
     if not items then return nil end
     for slot, item in pairs(items) do
-        if item.name:lower() == itemName:lower() and not info and table_matches(info or {}, item.info or {}) or item.name:lower() == itemName:lower() and info and table_matches(info or {}, item.info or {}) then
+        if not info and item.name:lower() == itemName:lower() or item.name:lower() == itemName:lower() and not info and table_matches(info or {}, item.info or {}) or item.name:lower() == itemName:lower() and info and table_matches(info or {}, item.info or {}) then
             return tonumber(slot)
         end
     end
@@ -403,15 +403,12 @@ exports("SetInventory", SetInventory)
 ---@return boolean success Returns true if it worked
 local function SetItemData(source, itemName, key, val)
 	if not itemName or not key then return false end
-
 	local Player = QBCore.Functions.GetPlayer(source)
 
 	if not Player then return end
 
 	local item = GetItemByName(source, itemName)
-
 	if not item then return false end
-
 	item[key] = val
 	Player.PlayerData.items[item.slot] = item
 	Player.Functions.SetPlayerData("items", Player.PlayerData.items)
